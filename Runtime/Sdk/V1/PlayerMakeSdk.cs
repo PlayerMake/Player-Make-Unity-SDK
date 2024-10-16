@@ -20,16 +20,21 @@ namespace PlayerMake.V1
                 _creationApi = new CreationApi(_developerSettings.ApiBaseUrl);
         }
 
-        public static async Task<List<Creation>> ListCreationsAsync(string userId = null)
+        public static async Task<(List<Creation>, Pagination)> ListCreationsAsync(string userId = null, int limit = 10, int skip = 0)
         {
             Init();
 
-            var creationListResponse = await _creationApi.ListCreationsAsync(new CreationListRequest()
+            var creationResponse = await _creationApi.ListCreationsAsync(new CreationListRequest()
             {
-                Params = new CreationListQueryParams() { UserId = userId, ProjectId = _developerSettings.ProjectId }
+                Params = new CreationListQueryParams() {
+                    UserId = userId,
+                    ProjectId = _developerSettings.ProjectId,
+                    Limit = limit,
+                    Skip = skip
+                }
             });
 
-            return creationListResponse.Data;
+            return (creationResponse.Data, creationResponse.Pagination);
         }
 
         public static async Task<GameObject> InstantiateAsync<T>(T downloadableModel, string name = null, Transform parent = null) where T : IDownloadableModel
