@@ -1,0 +1,23 @@
+{
+  "name": "com.playermake.sdk",
+  "version": "0.0.1",
+  "displayName": "Player Make SDK",
+  "description": "The official Player Make SDK. Easy to setup, and built to power UGC in games.",
+  "unity": "2021.3",
+  "author": {
+    "name": "Player Make",
+    "email": "info@playermake.com",
+    "url": "https://playermake.com"
+  },
+  "dependencies": {
+    "com.unity.cloud.gltfast": "6.8.0",
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "keywords": [
+    "player make",
+    "ugc",
+    "user generated content",
+    "skins",
+    "skin creator"
+  ]
+}
