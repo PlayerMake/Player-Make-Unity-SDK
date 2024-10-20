@@ -67,6 +67,7 @@ namespace PlayerMake.Api
             if (webRequest.result == UnityWebRequest.Result.Success)
                 return JsonConvert.DeserializeObject<TResponse>(webRequest.downloadHandler.text);
 
+            Debug.Log(webRequest.url);
             Debug.Log(webRequest.error);
 
             return new TResponse()

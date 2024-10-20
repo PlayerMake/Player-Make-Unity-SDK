@@ -1,4 +1,5 @@
 using GLTFast;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace PlayerMake.V1
     {
         private static PlayerMakeSettings _developerSettings;
         private static CreationApi _creationApi;
+        private static AssetApi _assetApi;
 
         private static void Init()
         {
@@ -18,9 +20,38 @@ namespace PlayerMake.V1
 
             if (_creationApi == null)
                 _creationApi = new CreationApi(_developerSettings.ApiBaseUrl);
+
+            if (_assetApi == null)
+                _assetApi = new AssetApi(_developerSettings.ApiBaseUrl);
         }
 
-        public static async Task<(List<Creation>, Pagination)> ListCreationsAsync(string userId = null, int limit = 10, int skip = 0)
+        public static async Task<(List<Asset>, Pagination)> ListAssetsAsync(
+            int limit = 10,
+            int skip = 0
+            )
+        {
+            Init();
+
+            var assetResponse = await _assetApi.ListAssetsAsync(new AssetListRequest()
+            {
+                Params = new AssetListQueryParams()
+                {
+                    ProjectId = _developerSettings.ProjectId,
+                    Limit = limit,
+                    Skip = skip
+                }
+            });
+
+            return (assetResponse.Data, assetResponse.Pagination);
+        }
+
+        public static async Task<(List<Creation>, Pagination)> ListCreationsAsync(
+            string userId = null,
+            string assetId = null,
+            string[] statuses = null,
+            int limit = 10,
+            int skip = 0
+            )
         {
             Init();
 
@@ -28,7 +59,9 @@ namespace PlayerMake.V1
             {
                 Params = new CreationListQueryParams() {
                     UserId = userId,
+                    AssetId = assetId,
                     ProjectId = _developerSettings.ProjectId,
+                    Status = statuses,
                     Limit = limit,
                     Skip = skip
                 }

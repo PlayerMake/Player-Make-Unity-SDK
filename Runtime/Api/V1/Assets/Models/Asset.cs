@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-public class Creation : IDownloadableIcon, IDownloadableModel
+public class Asset : IDownloadableIcon, IDownloadableModel
 {
     [JsonProperty("_id")]
     public string Id { get; set; }

@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 public static class QueryBuilderExtensions
 {
@@ -27,6 +28,14 @@ public static class QueryBuilderExtensions
                 {
                     queryString
                         .Append($"{Uri.EscapeDataString(entry.Key.ToString())}={Uri.EscapeDataString(entry.Value.ToString())}&");
+                }
+            }
+            else if (value is IEnumerable<string> stringArray)
+            {
+                // Handle arrays of strings by appending multiple key-value pairs
+                foreach (var stringValue in stringArray)
+                {
+                    queryString.Append($"{Uri.EscapeDataString(key.ToString())}={Uri.EscapeDataString(stringValue)}&");
                 }
             }
             else
