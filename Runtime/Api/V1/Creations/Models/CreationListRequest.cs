@@ -10,8 +10,8 @@ public class CreationListQueryParams : PaginationQueryParams
     [JsonProperty("projectId")]
     public string ProjectId { get; set; }
 
-    [JsonProperty("userId")]
-    public string UserId { get; set; }
+    [JsonProperty("playerId")]
+    public string PlayerId { get; set; }
 
     [JsonProperty("assetId")]
     public string AssetId { get; set; }

@@ -1,5 +1,4 @@
 using GLTFast;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ namespace PlayerMake.V1
         private static PlayerMakeSettings _developerSettings;
         private static CreationApi _creationApi;
         private static AssetApi _assetApi;
+        private static PlayerApi _playerApi;
 
         private static void Init()
         {
@@ -23,6 +23,16 @@ namespace PlayerMake.V1
 
             if (_assetApi == null)
                 _assetApi = new AssetApi(_developerSettings.ApiBaseUrl);
+
+            if (_playerApi == null)
+                _playerApi = new PlayerApi(_developerSettings.ApiBaseUrl);
+        }
+
+        public static async Task<PlayerLoginResponse> LoginPlayerWithCodeAsync(string code)
+        {
+            Init();
+
+            return await _playerApi.LoginAync(new PlayerLoginRequest() { Code = code });
         }
 
         public static async Task<(List<Asset>, Pagination)> ListAssetsAsync(
@@ -46,7 +56,7 @@ namespace PlayerMake.V1
         }
 
         public static async Task<(List<Creation>, Pagination)> ListCreationsAsync(
-            string userId = null,
+            string playerId = null,
             string assetId = null,
             string[] statuses = null,
             int limit = 10,
@@ -58,7 +68,7 @@ namespace PlayerMake.V1
             var creationResponse = await _creationApi.ListCreationsAsync(new CreationListRequest()
             {
                 Params = new CreationListQueryParams() {
-                    UserId = userId,
+                    PlayerId = playerId,
                     AssetId = assetId,
                     ProjectId = _developerSettings.ProjectId,
                     Status = statuses,
