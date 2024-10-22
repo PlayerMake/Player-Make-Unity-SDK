@@ -5,11 +5,11 @@ public class AssetApi : BaseApi
 {
     public const string Resource = "assets";
 
-    private readonly string _baseUrl;
+    private readonly PlayerMakeSettings _settings;
 
-    public AssetApi(string baseUrl)
+    public AssetApi(PlayerMakeSettings settings) : base(settings)
     {
-        _baseUrl = baseUrl;
+        _settings = settings;
     }
 
     public virtual async Task<AssetListResponse> ListAssetsAsync(AssetListRequest request)
@@ -18,7 +18,7 @@ public class AssetApi : BaseApi
 
         return await GetAsync<AssetListResponse>(new Request()
         {
-            Url = $"{_baseUrl}/v1/{Resource}{queryString}"
+            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}"
         });
     }
 }

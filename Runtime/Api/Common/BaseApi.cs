@@ -9,6 +9,12 @@ namespace PlayerMake.Api
 {
     public abstract class BaseApi
     {
+        private readonly PlayerMakeSettings _settings;
+
+        public BaseApi(PlayerMakeSettings settings)
+        {
+            _settings = settings;
+        }
 
         protected virtual async Task<TResponse> PostAsync<TResponse, TPayload>(RequestWithBody<TPayload> request) where TResponse : Response, new()
         {
@@ -42,6 +48,7 @@ namespace PlayerMake.Api
             webRequest.url = request.Url;
             webRequest.method = request.Method;
             webRequest.downloadHandler = new DownloadHandlerBuffer();
+            webRequest.SetRequestHeader("X-API-KEY", _settings.ApiKey);
 
             if (request.Headers != null)
             {

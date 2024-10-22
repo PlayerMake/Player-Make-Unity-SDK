@@ -5,11 +5,11 @@ public class CreationApi : BaseApi
 {
     public const string Resource = "creations";
 
-    private readonly string _baseUrl;
+    private readonly PlayerMakeSettings _settings;
 
-    public CreationApi(string baseUrl)
+    public CreationApi(PlayerMakeSettings settings) : base(settings)
     {
-        _baseUrl = baseUrl;
+        _settings = settings;
     }
 
     public virtual async Task<CreationListResponse> ListCreationsAsync(CreationListRequest request)
@@ -18,7 +18,7 @@ public class CreationApi : BaseApi
 
         return await GetAsync<CreationListResponse>(new Request()
         {
-            Url = $"{_baseUrl}/v1/{Resource}{queryString}"
+            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}"
         });
     }
 }

@@ -19,13 +19,13 @@ namespace PlayerMake.V1
                 _developerSettings = Resources.Load<PlayerMakeSettings>("PlayerMakeSettings");
 
             if (_creationApi == null)
-                _creationApi = new CreationApi(_developerSettings.ApiBaseUrl);
+                _creationApi = new CreationApi(_developerSettings);
 
             if (_assetApi == null)
-                _assetApi = new AssetApi(_developerSettings.ApiBaseUrl);
+                _assetApi = new AssetApi(_developerSettings);
 
             if (_playerApi == null)
-                _playerApi = new PlayerApi(_developerSettings.ApiBaseUrl);
+                _playerApi = new PlayerApi(_developerSettings);
         }
 
         public static async Task<PlayerLoginResponse> LoginPlayerWithCodeAsync(string code)
