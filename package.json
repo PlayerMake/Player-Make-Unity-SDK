@@ -13,6 +13,11 @@
     "com.unity.cloud.gltfast": "6.8.0",
     "com.unity.nuget.newtonsoft-json": "3.0.2"
   },
+  "samples": {
+    "displayName": "Player Login",
+    "description": "Contains a sample scene showing how to use player login codes to fetch UGC content for specific players.",
+    "path": "Samples~/Player Login"
+  },
   "keywords": [
     "player make",
     "ugc",
