@@ -1,12 +1,12 @@
 {
     "name": "PlayerMake.Runtime",
-    "rootNamespace": ",
+    "rootNamespace": "",
     "references": [
         "glTFast"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode" false,
+    "allowUnsafeCode": false,
     "overrideReference": false,
     "precompiledReferences": [],
     "autoReferenced": true,

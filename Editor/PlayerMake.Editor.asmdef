@@ -1,6 +1,6 @@
 {
     "name": "PlayerMake.Editor",
-    "rootNamespace": ",
+    "rootNamespace": "",
     "references": [
         "glTFast",
         "PlayerMake.Runtime"
@@ -9,7 +9,7 @@
         "Editor"
     ],
     "excludePlatforms": [],
-    "allowUnsafeCode" false,
+    "allowUnsafeCode": false,
     "overrideReference": false,
     "precompiledReferences": [],
     "autoReferenced": true,
