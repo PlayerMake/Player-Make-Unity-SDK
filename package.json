@@ -15,6 +15,11 @@
   },
   "samples": [
     {
+      "displayName": "Public Creations",
+      "descriptions": "Contains a sample scene showing how a developer's UGC content can be listed and instantiated in the scene.",
+      "path": "Samples~/Public Creations"
+    },
+    {
       "displayName": "Player Login",
       "description": "Contains a sample scene showing how to use player login codes to fetch UGC content for specific players.",
       "path": "Samples~/Player Login"

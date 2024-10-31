@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace PlayerMake.Api
                 Method = "POST",
                 SerializedPayload = serializedPayload,
                 Url = request.Url
-            });
+            }, request.Callbacks);
         }
 
         protected virtual async Task<TResponse> GetAsync<TResponse>(Request request) where TResponse : Response, new()
@@ -39,10 +40,11 @@ namespace PlayerMake.Api
                 Headers = request.Headers,
                 Method = "GET",
                 Url = request.Url
-            });
+            }, request.Callbacks);
         }
 
-        private async Task<TResponse> SendAsync<TResponse>(BaseRequest request) where TResponse : Response, new()
+        private async Task<TResponse> SendAsync<TResponse>(BaseRequest request, RequestCallbacks callbacks
+        ) where TResponse : Response, new()
         {
             using var webRequest = new UnityWebRequest();
             webRequest.url = request.Url;
@@ -65,17 +67,28 @@ namespace PlayerMake.Api
             }
 
             var asyncOperation = webRequest.SendWebRequest();
+            var progressPassCount = 0;
 
             while (!asyncOperation.isDone)
             {
+                callbacks?.OnProgress?.Invoke(asyncOperation.progress, progressPassCount);
+                progressPassCount++;
                 await Task.Yield();
             }
 
+            callbacks?.OnProgress?.Invoke(asyncOperation.progress, progressPassCount);
+
             if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                callbacks?.OnComplete?.Invoke();
+
                 return JsonConvert.DeserializeObject<TResponse>(webRequest.downloadHandler.text);
+            }
 
             Debug.Log(webRequest.url);
             Debug.Log(webRequest.error);
+
+            callbacks?.OnError?.Invoke(webRequest.error);
 
             return new TResponse()
             {

@@ -1,4 +1,5 @@
 using GLTFast;
+using PlayerMake.Api;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace PlayerMake.V1
         private static CreationApi _creationApi;
         private static AssetApi _assetApi;
         private static PlayerApi _playerApi;
+        private static DeveloperApi _developerApi;
 
         private static void Init()
         {
@@ -26,18 +28,29 @@ namespace PlayerMake.V1
 
             if (_playerApi == null)
                 _playerApi = new PlayerApi(_developerSettings);
+
+            if (_developerApi == null)
+                _developerApi = new DeveloperApi(_developerSettings);
         }
 
-        public static async Task<PlayerLoginResponse> LoginPlayerWithCodeAsync(string code)
+        public static async Task<PlayerLoginResponse> LoginPlayerWithCodeAsync(string code, RequestCallbacks callbacks = null)
         {
             Init();
 
-            return await _playerApi.LoginAync(new PlayerLoginRequest() { Code = code });
+            return await _playerApi.LoginAync(new PlayerLoginRequest() { Code = code }, callbacks);
+        }
+
+        public static async Task<Developer> GetDeveloperAsync(RequestCallbacks callbacks = null)
+        {
+            Init();
+
+            return (await _developerApi.GetDeveloperAsync(new DeveloperGetRequest() { Id = _developerSettings.ProjectId }, callbacks)).Data;
         }
 
         public static async Task<(List<Asset>, Pagination)> ListAssetsAsync(
             int limit = 10,
-            int skip = 0
+            int skip = 0,
+            RequestCallbacks callbacks = null
             )
         {
             Init();
@@ -50,7 +63,7 @@ namespace PlayerMake.V1
                     Limit = limit,
                     Skip = skip
                 }
-            });
+            }, callbacks);
 
             return (assetResponse.Data, assetResponse.Pagination);
         }
@@ -60,7 +73,8 @@ namespace PlayerMake.V1
             string assetId = null,
             string[] statuses = null,
             int limit = 10,
-            int skip = 0
+            int skip = 0,
+            RequestCallbacks callbacks = null
             )
         {
             Init();
@@ -75,7 +89,7 @@ namespace PlayerMake.V1
                     Limit = limit,
                     Skip = skip
                 }
-            });
+            }, callbacks);
 
             return (creationResponse.Data, creationResponse.Pagination);
         }

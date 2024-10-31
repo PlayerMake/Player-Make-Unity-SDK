@@ -13,13 +13,14 @@ public class PlayerApi : BaseApi
         _settings = settings;
     }
 
-    public virtual async Task<PlayerLoginResponse> LoginAync(PlayerLoginRequest request)
+    public virtual async Task<PlayerLoginResponse> LoginAync(PlayerLoginRequest request, RequestCallbacks callbacks)
     {
         return await PostAsync<PlayerLoginResponse, PlayerLoginRequest>(new RequestWithBody<PlayerLoginRequest>()
         {
             Url = $"{_settings.ApiBaseUrl}/v1/{Resource}/login-with-code",
             Payload = request,
-            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+            Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } },
+            Callbacks = callbacks
         });
     }
 }

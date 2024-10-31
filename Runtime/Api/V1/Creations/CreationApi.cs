@@ -12,13 +12,14 @@ public class CreationApi : BaseApi
         _settings = settings;
     }
 
-    public virtual async Task<CreationListResponse> ListCreationsAsync(CreationListRequest request)
+    public virtual async Task<CreationListResponse> ListCreationsAsync(CreationListRequest request, RequestCallbacks callbacks)
     {
         var queryString = request.Params.GenerateQueryString();
 
         return await GetAsync<CreationListResponse>(new Request()
         {
-            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}"
+            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}",
+            Callbacks = callbacks,
         });
     }
 }
