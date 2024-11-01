@@ -2248,7 +2248,6 @@ GameObject:
   - component: {fileID: 1845845639}
   - component: {fileID: 1845845638}
   - component: {fileID: 1845845637}
-  - component: {fileID: 1845845636}
   m_Layer: 0
   m_Name: Back Wall
   m_TagString: Untagged
@@ -2271,22 +2270,6 @@ Transform:
   m_Father: {fileID: 2140993912}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1845845636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1845845634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36c1d24b1c2d5f7429d11be5b2236a53, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonPrefab: {fileID: 7152563353196722102, guid: e824375a6c456cf40b1a9c4dd5bf155f, type: 3}
-  canvas: {fileID: 439947884}
-  current: {fileID: 0}
-  inputField: {fileID: 0}
 --- !u!65 &1845845637
 BoxCollider:
   m_ObjectHideFlags: 0
