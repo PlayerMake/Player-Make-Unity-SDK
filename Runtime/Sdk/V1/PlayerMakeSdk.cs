@@ -37,7 +37,10 @@ namespace PlayerMake.V1
         {
             Init();
 
-            return await _playerApi.LoginAync(new PlayerLoginRequest() { Code = code }, callbacks);
+            return await _playerApi.LoginAync(new PlayerLoginRequest() { 
+                Code = code,
+                ProjectId = _developerSettings.ProjectId
+            }, callbacks);
         }
 
         public static async Task<Developer> GetDeveloperAsync(RequestCallbacks callbacks = null)
