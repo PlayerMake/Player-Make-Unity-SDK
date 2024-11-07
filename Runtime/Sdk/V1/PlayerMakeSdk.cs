@@ -115,6 +115,28 @@ namespace PlayerMake.V1
             return gameObject;
         }
 
+        public static async Task<GameObject> ApplySkinAsync<T>(T downloadableModel, GameObject target) where T : IDownloadableModel
+        {
+            Init();
+
+            var importer = new GltfImport();
+
+            if (!await importer.Load(downloadableModel.Url))
+                return null;
+
+            var gameObject = new GameObject("PlayerMake_Temp");
+
+            gameObject.transform.position = new Vector3(-5000, -5000, -5000);
+
+            await importer.InstantiateMainSceneAsync(gameObject.transform);
+
+            TransferTextures(gameObject, target, "baseColorTexture");
+
+            Object.Destroy(gameObject);
+
+            return target;
+        }
+
         public static async Task<List<IconDownloadResponse>> LoadIconAsync<T>(T downloadableIcon) where T : IDownloadableIcon
         {
             Init();
@@ -134,6 +156,50 @@ namespace PlayerMake.V1
                         Image = await FileApi.DownloadImageAsync(downloadableIcon.IconUrl)
                     }
                 ))).ToList();
+        }
+
+        private static void TransferTextures(GameObject sourceRoot, GameObject targetRoot, string targetTexture)
+        {
+            var sourceTextures = new Dictionary<string, Texture>();
+
+            CollectBaseColorTextures(sourceRoot.transform, sourceTextures, targetTexture);
+            ApplyTexturesToTargetHierarchy(targetRoot.transform, sourceTextures);
+        }
+
+        private static void CollectBaseColorTextures(Transform sourceNode, Dictionary<string, Texture> textureMap, string textureName)
+        {
+            var renderer = sourceNode.GetComponent<Renderer>();
+
+            if (renderer != null && renderer.material != null)
+            {
+                if (renderer.material.HasProperty(textureName))
+                {
+                    textureMap[sourceNode.name] = renderer.material.GetTexture(textureName);
+                }
+            }
+
+            foreach (Transform child in sourceNode)
+            {
+                CollectBaseColorTextures(child, textureMap, textureName);
+            }
+        }
+
+        private static void ApplyTexturesToTargetHierarchy(Transform targetNode, Dictionary<string, Texture> textureMap)
+        {
+            if (textureMap.TryGetValue(targetNode.name, out Texture baseColorTexture))
+            {
+                var renderer = targetNode.GetComponent<Renderer>();
+                if (renderer != null && renderer.material != null)
+                {
+                    renderer.material.mainTexture = baseColorTexture;
+                    renderer.material.color = Color.white;
+                }
+            }
+
+            foreach (Transform child in targetNode)
+            {
+                ApplyTexturesToTargetHierarchy(child, textureMap);
+            }
         }
     }
 }
