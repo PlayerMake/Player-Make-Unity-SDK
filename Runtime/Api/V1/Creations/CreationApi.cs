@@ -1,25 +1,27 @@
-using PlayerMake.Api;
 using System.Threading.Tasks;
 
-public class CreationApi : BaseApi
+namespace PlayerMake.Api
 {
-    public const string Resource = "creations";
-
-    private readonly PlayerMakeSettings _settings;
-
-    public CreationApi(PlayerMakeSettings settings) : base(settings)
+    public class CreationApi : BaseApi
     {
-        _settings = settings;
-    }
+        public const string Resource = "creations";
 
-    public virtual async Task<CreationListResponse> ListCreationsAsync(CreationListRequest request, RequestCallbacks callbacks)
-    {
-        var queryString = request.Params.GenerateQueryString();
+        private readonly PlayerMakeSettings _settings;
 
-        return await GetAsync<CreationListResponse>(new Request()
+        public CreationApi(PlayerMakeSettings settings) : base(settings)
         {
-            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}",
-            Callbacks = callbacks,
-        });
+            _settings = settings;
+        }
+
+        public virtual async Task<CreationListResponse> ListCreationsAsync(CreationListRequest request, RequestCallbacks callbacks)
+        {
+            var queryString = request.Params.GenerateQueryString();
+
+            return await GetAsync<CreationListResponse>(new Request()
+            {
+                Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}",
+                Callbacks = callbacks,
+            });
+        }
     }
 }

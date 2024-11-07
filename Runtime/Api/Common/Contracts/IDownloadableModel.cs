@@ -1,5 +1,9 @@
-public interface IDownloadableModel {
-    public string Id { get; set; }
+namespace PlayerMake.Api
+{
+    public interface IDownloadableModel
+    {
+        public string Id { get; set; }
 
-    public string Url { get; set; }
+        public string Url { get; set; }
+    }
 }

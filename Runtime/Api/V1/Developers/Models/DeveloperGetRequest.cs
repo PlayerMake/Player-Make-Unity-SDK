@@ -1,4 +1,7 @@
-public class DeveloperGetRequest
+namespace PlayerMake.Api
 {
-    public string Id { get; set; }
+    public class DeveloperGetRequest
+    {
+        public string Id { get; set; }
+    }
 }

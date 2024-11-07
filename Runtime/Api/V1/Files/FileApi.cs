@@ -2,18 +2,21 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public static class FileApi
+namespace PlayerMake.Api
 {
-    public static async Task<Texture2D> DownloadImageAsync(string url)
+    public static class FileApi
     {
-        var webRequest = UnityWebRequestTexture.GetTexture(url);
-        var asyncOperation = webRequest.SendWebRequest();
-
-        while (!asyncOperation.isDone)
+        public static async Task<Texture2D> DownloadImageAsync(string url)
         {
-            await Task.Yield();
-        }
+            var webRequest = UnityWebRequestTexture.GetTexture(url);
+            var asyncOperation = webRequest.SendWebRequest();
 
-        return DownloadHandlerTexture.GetContent(webRequest);
+            while (!asyncOperation.isDone)
+            {
+                await Task.Yield();
+            }
+
+            return DownloadHandlerTexture.GetContent(webRequest);
+        }
     }
 }

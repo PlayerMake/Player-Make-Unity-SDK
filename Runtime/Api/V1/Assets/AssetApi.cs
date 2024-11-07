@@ -1,25 +1,27 @@
-using PlayerMake.Api;
 using System.Threading.Tasks;
 
-public class AssetApi : BaseApi
+namespace PlayerMake.Api
 {
-    public const string Resource = "assets";
-
-    private readonly PlayerMakeSettings _settings;
-
-    public AssetApi(PlayerMakeSettings settings) : base(settings)
+    public class AssetApi : BaseApi
     {
-        _settings = settings;
-    }
+        public const string Resource = "assets";
 
-    public virtual async Task<AssetListResponse> ListAssetsAsync(AssetListRequest request, RequestCallbacks callbacks = null)
-    {
-        var queryString = request.Params.GenerateQueryString();
+        private readonly PlayerMakeSettings _settings;
 
-        return await GetAsync<AssetListResponse>(new Request()
+        public AssetApi(PlayerMakeSettings settings) : base(settings)
         {
-            Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}",
-            Callbacks = callbacks
-        });
+            _settings = settings;
+        }
+
+        public virtual async Task<AssetListResponse> ListAssetsAsync(AssetListRequest request, RequestCallbacks callbacks = null)
+        {
+            var queryString = request.Params.GenerateQueryString();
+
+            return await GetAsync<AssetListResponse>(new Request()
+            {
+                Url = $"{_settings.ApiBaseUrl}/v1/{Resource}{queryString}",
+                Callbacks = callbacks
+            });
+        }
     }
 }

@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class IconDownloadResponse
+namespace PlayerMake.Api
 {
-    public string Id { get; set; }
+    public class IconDownloadResponse
+    {
+        public string Id { get; set; }
 
-    public Texture2D Image { get; set; }
+        public Texture2D Image { get; set; }
+    }
 }

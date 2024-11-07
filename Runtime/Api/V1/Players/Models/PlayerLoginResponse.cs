@@ -1,14 +1,16 @@
 using Newtonsoft.Json;
-using PlayerMake.Api;
 
-public class PlayerLoginResponse : Response
+namespace PlayerMake.Api
 {
-    [JsonProperty("accessToken")]
-    public string AccessToken { get; set; }
+    public class PlayerLoginResponse : Response
+    {
+        [JsonProperty("accessToken")]
+        public string AccessToken { get; set; }
 
-    [JsonProperty("name")]
-    public string Name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-    [JsonProperty("id")]
-    public string Id { get; set; }
+        [JsonProperty("id")]
+        public string Id { get; set; }
+    }
 }

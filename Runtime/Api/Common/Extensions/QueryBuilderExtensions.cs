@@ -6,51 +6,54 @@ using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 
-public static class QueryBuilderExtensions
+namespace PlayerMake.Api
 {
-    public static string GenerateQueryString<T>(this T queryParams)
+    public static class QueryBuilderExtensions
     {
-        var properties = queryParams.GetType().GetProperties()
-            .Where(property => property.GetValue(queryParams, null) != null)
-            .ToDictionary(GetPropertyName, property => property.GetValue(queryParams, null));
-
-        if (properties.Count == 0)
-            return string.Empty;
-
-        var queryString = new StringBuilder();
-        queryString.Append('?');
-
-        foreach (var (key, value) in properties)
+        public static string GenerateQueryString<T>(this T queryParams)
         {
-            if (value is IDictionary dictionary)
+            var properties = queryParams.GetType().GetProperties()
+                .Where(property => property.GetValue(queryParams, null) != null)
+                .ToDictionary(GetPropertyName, property => property.GetValue(queryParams, null));
+
+            if (properties.Count == 0)
+                return string.Empty;
+
+            var queryString = new StringBuilder();
+            queryString.Append('?');
+
+            foreach (var (key, value) in properties)
             {
-                foreach (DictionaryEntry entry in dictionary)
+                if (value is IDictionary dictionary)
                 {
-                    queryString
-                        .Append($"{Uri.EscapeDataString(entry.Key.ToString())}={Uri.EscapeDataString(entry.Value.ToString())}&");
+                    foreach (DictionaryEntry entry in dictionary)
+                    {
+                        queryString
+                            .Append($"{Uri.EscapeDataString(entry.Key.ToString())}={Uri.EscapeDataString(entry.Value.ToString())}&");
+                    }
+                }
+                else if (value is IEnumerable<string> stringArray)
+                {
+                    // Handle arrays of strings by appending multiple key-value pairs
+                    foreach (var stringValue in stringArray)
+                    {
+                        queryString.Append($"{Uri.EscapeDataString(key.ToString())}={Uri.EscapeDataString(stringValue)}&");
+                    }
+                }
+                else
+                {
+                    queryString.Append($"{Uri.EscapeDataString(key.ToString())}={Uri.EscapeDataString(value.ToString())}&");
                 }
             }
-            else if (value is IEnumerable<string> stringArray)
-            {
-                // Handle arrays of strings by appending multiple key-value pairs
-                foreach (var stringValue in stringArray)
-                {
-                    queryString.Append($"{Uri.EscapeDataString(key.ToString())}={Uri.EscapeDataString(stringValue)}&");
-                }
-            }
-            else
-            {
-                queryString.Append($"{Uri.EscapeDataString(key.ToString())}={Uri.EscapeDataString(value.ToString())}&");
-            }
+
+            return queryString.ToString();
         }
 
-        return queryString.ToString();
-    }
-
-    private static string GetPropertyName(MemberInfo prop)
-    {
-        return prop.GetCustomAttribute<JsonPropertyAttribute>() != null
-            ? prop.GetCustomAttribute<JsonPropertyAttribute>().PropertyName
-            : prop.Name;
+        private static string GetPropertyName(MemberInfo prop)
+        {
+            return prop.GetCustomAttribute<JsonPropertyAttribute>() != null
+                ? prop.GetCustomAttribute<JsonPropertyAttribute>().PropertyName
+                : prop.Name;
+        }
     }
 }

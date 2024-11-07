@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
 
-public class Developer
+namespace PlayerMake.Api
 {
-    [JsonProperty("id")]
-    public string Id { get; set; }
+    public class Developer
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
 
-    [JsonProperty("shortId")]
-    public string ShortId { get; set; }
+        [JsonProperty("shortId")]
+        public string ShortId { get; set; }
+    }
 }
