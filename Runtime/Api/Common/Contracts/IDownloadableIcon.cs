@@ -1,6 +1,9 @@
-public interface IDownloadableIcon
+namespace PlayerMake.Api
 {
-    string Id { get; set; }
+    public interface IDownloadableIcon
+    {
+        string Id { get; set; }
 
-    string IconUrl { get; set; }
+        string IconUrl { get; set; }
+    }
 }

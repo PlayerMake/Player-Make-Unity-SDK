@@ -1,12 +1,15 @@
 using Newtonsoft.Json;
 
-public class AssetListRequest
+namespace PlayerMake.Api
 {
-    public AssetListQueryParams Params { get; set; } = new AssetListQueryParams();
-}
+    public class AssetListRequest
+    {
+        public AssetListQueryParams Params { get; set; } = new AssetListQueryParams();
+    }
 
-public class AssetListQueryParams : PaginationQueryParams
-{
-    [JsonProperty("projectId")]
-    public string ProjectId { get; set; }
+    public class AssetListQueryParams : PaginationQueryParams
+    {
+        [JsonProperty("projectId")]
+        public string ProjectId { get; set; }
+    }
 }

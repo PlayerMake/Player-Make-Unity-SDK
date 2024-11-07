@@ -1,16 +1,19 @@
 using Newtonsoft.Json;
 
-public class Asset : IDownloadableIcon, IDownloadableModel
+namespace PlayerMake.Api
 {
-    [JsonProperty("_id")]
-    public string Id { get; set; }
+    public class Asset : IDownloadableIcon, IDownloadableModel
+    {
+        [JsonProperty("_id")]
+        public string Id { get; set; }
 
-    [JsonProperty("name")]
-    public string Name { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
 
-    [JsonProperty("url")]
-    public string Url { get; set; }
+        [JsonProperty("url")]
+        public string Url { get; set; }
 
-    [JsonProperty("iconUrl")]
-    public string IconUrl { get; set; }
+        [JsonProperty("iconUrl")]
+        public string IconUrl { get; set; }
+    }
 }

@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
 
-public class PlayerLoginRequest
+namespace PlayerMake.Api
 {
-    [JsonProperty("code")]
-    public string Code { get; set; }
+    public class PlayerLoginRequest
+    {
+        [JsonProperty("code")]
+        public string Code { get; set; }
 
-    [JsonProperty("projectId")]
-    public string ProjectId { get; set; }
+        [JsonProperty("projectId")]
+        public string ProjectId { get; set; }
+    }
 }

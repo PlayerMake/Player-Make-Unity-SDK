@@ -1,10 +1,13 @@
 using Newtonsoft.Json;
 
-public class PaginationQueryParams
+namespace PlayerMake.Api
 {
-    [JsonProperty("limit")]
-    public int Limit { get; set; }
+    public class PaginationQueryParams
+    {
+        [JsonProperty("limit")]
+        public int Limit { get; set; }
 
-    [JsonProperty("skip")]
-    public int Skip { get; set; }
+        [JsonProperty("skip")]
+        public int Skip { get; set; }
+    }
 }
