@@ -1,4 +1,4 @@
-**Player Make** is a Unity UGC platform that allows developers to turn any in-game asset into something that players can customize and make their own.
+**Player Make** is a UGC platform that allows developers to turn any in-game asset into something that players can customize and make their own.
 
 ## Features
 
