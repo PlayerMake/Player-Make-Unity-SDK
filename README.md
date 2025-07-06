@@ -2,7 +2,6 @@
 
 ## Features
 
-✅ Embeddable skin creator
 ✅ SDK for fetching player designs and loading them in game
 ✅ Lightweight and optimized for performance
 
