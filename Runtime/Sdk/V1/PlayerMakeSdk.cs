@@ -1,4 +1,5 @@
 using GLTFast;
+using GLTFast.Loading;
 using PlayerMake.Api;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,7 +102,12 @@ namespace PlayerMake.V1
         {
             Init();
 
-            var importer = new GltfImport();
+            var provider = new CustomHeaderDownloadProvider(new List<HttpHeader>()
+            {
+                new HttpHeader("x-api-key", _developerSettings.ApiKey)
+            }.ToArray());
+
+            var importer = new GltfImport(provider);
 
             if (!await importer.Load(downloadableModel.Url))
                 return null;
@@ -119,7 +125,12 @@ namespace PlayerMake.V1
         {
             Init();
 
-            var importer = new GltfImport();
+            var provider = new CustomHeaderDownloadProvider(new List<HttpHeader>()
+            {
+                new HttpHeader("x-api-key", _developerSettings.ApiKey)
+            }.ToArray());
+
+            var importer = new GltfImport(provider);
 
             if (!await importer.Load(downloadableModel.Url))
                 return null;
@@ -153,9 +164,33 @@ namespace PlayerMake.V1
                     new IconDownloadResponse()
                     {
                         Id = downloadableIcon.Id,
-                        Image = await FileApi.DownloadImageAsync(downloadableIcon.IconUrl)
+                        Image = await FileApi.DownloadImageAsync(downloadableIcon.IconUrl, _developerSettings.ApiKey)
                     }
                 ))).ToList();
+        }
+
+        public static async Task<DeveloperValidation> VerifyApiKeyAsync(string apiKey, RequestCallbacks callbacks = null)
+        {
+            Init();
+
+            var userResponse = await _developerApi.VerifyApiKeyAsync(apiKey, callbacks);
+
+            if (userResponse.IsSuccess)
+                return userResponse.Data;
+
+            return null;
+        }
+
+        public static async Task<DeveloperQuota> GetQuotaAsync(string apiKey, RequestCallbacks callbacks = null)
+        {
+            Init();
+
+            var quotaResponse = await _developerApi.GetQuoataAsync(apiKey, callbacks);
+
+            if (quotaResponse.IsSuccess)
+                return quotaResponse.Data;
+
+            return null;
         }
 
         private static void TransferTextures(GameObject sourceRoot, GameObject targetRoot, string targetTexture)

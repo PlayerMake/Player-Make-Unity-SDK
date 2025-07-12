@@ -3,7 +3,8 @@ using PlayerMake.V1;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PlayerLoginSample {
+namespace PublicCreationsBRPSample
+{
     public class UIManager : MonoBehaviour
     {
         // Prefab references
@@ -11,16 +12,10 @@ namespace PlayerLoginSample {
 
         // Scene object references
         public GameObject contentContainer;
-        public InputField codeInput;
-        public Text errorText;
-        public Text playerNameText;
-        public Text noAssetsText;
         public Text loadingText;
-        public GameObject loggedOutPanel;
-        public GameObject loggedInPanel;
+        public Text noAssetsText;
 
         // Script variables
-        public string currentPlayerId;
         public GameObject current;
 
         async void Start()
@@ -35,20 +30,8 @@ namespace PlayerLoginSample {
             {
                 noAssetsText.text = $"You have no skins yet, go to <b>https://gamer.playermake.com/creator/{developer.Id}</b> to create your first skin.";
             }
-        }
 
-
-        void Update()
-        {
-            if (!string.IsNullOrEmpty(currentPlayerId))
-            {
-                loggedInPanel.SetActive(true);
-                loggedOutPanel.SetActive(false);
-            } else
-            {
-                loggedInPanel.SetActive(false);
-                loggedOutPanel.SetActive(true);
-            }
+            TryLoadCreations();
         }
 
         public async void TryLoadCreations()
@@ -58,56 +41,37 @@ namespace PlayerLoginSample {
                 Destroy(child.gameObject);
             }
 
-            if (string.IsNullOrEmpty(currentPlayerId))
-            {
-                var loginResponse = await PlayerMakeSdk.LoginPlayerWithCodeAsync(codeInput.text);
-
-                errorText.gameObject.SetActive(false);
-
-                if (!loginResponse.IsSuccess)
-                {
-                    errorText.gameObject.SetActive(true);
-                    return;
-                }
-
-                codeInput.text = string.Empty;
-                currentPlayerId = loginResponse.Id;
-                playerNameText.text = "Hey, " + loginResponse.Name;
-            }
-
             (var creations, var pagination) = await PlayerMakeSdk.ListCreationsAsync(
                 statuses: new string[] { "APPROVED", "PENDING_APPROVAL" },
-                playerId: currentPlayerId,
                 callbacks: new RequestCallbacks()
-            {
-                OnProgress = (progress, passCount) =>
                 {
-                    switch ((passCount / 5) % 3)
+                    OnProgress = (progress, passCount) =>
                     {
-                        case 0:
-                            loadingText.text = ".";
-                            break;
-                        case 1:
-                            loadingText.text = "..";
-                            break;
-                        case 2:
-                            loadingText.text = "...";
-                            break;
+                        switch ((passCount / 5) % 3)
+                        {
+                            case 0:
+                                loadingText.text = ".";
+                                break;
+                            case 1:
+                                loadingText.text = "..";
+                                break;
+                            case 2:
+                                loadingText.text = "...";
+                                break;
+                        }
                     }
                 }
-            });
+            );
 
             loadingText.text = "Refresh";
 
             if (creations.Count == 0)
             {
                 noAssetsText.gameObject.SetActive(true);
-            }
-            else
+            } else
             {
                 noAssetsText.gameObject.SetActive(false);
             }
-
 
             var icons = await PlayerMakeSdk.LoadIconsAsync(creations);
 
@@ -129,17 +93,6 @@ namespace PlayerLoginSample {
 
                 var image = button.GetComponent<RawImage>();
                 image.texture = icon.Image;
-            }
-        }
-
-        public void LogOut()
-        {
-            currentPlayerId = null;
-            playerNameText.text = string.Empty;
-
-            foreach (Transform child in contentContainer.transform)
-            {
-                Destroy(child.gameObject);
             }
         }
     }

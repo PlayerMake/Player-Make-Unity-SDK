@@ -3,7 +3,7 @@ using PlayerMake.V1;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PublicCreationsSample
+namespace PublicCreationsURPSample
 {
     public class UIManager : MonoBehaviour
     {

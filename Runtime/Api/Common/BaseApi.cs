@@ -1,3 +1,4 @@
+using Codice.Client.BaseCommands.Merge.Xml;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Text;
@@ -84,8 +85,8 @@ namespace PlayerMake.Api
                 return JsonConvert.DeserializeObject<TResponse>(webRequest.downloadHandler.text);
             }
 
-            Debug.Log(webRequest.url);
-            Debug.Log(webRequest.error);
+            // Debug.LogWarning(webRequest.url);
+            // Debug.LogWarning(webRequest.error);
 
             callbacks?.OnError?.Invoke(webRequest.error);
 

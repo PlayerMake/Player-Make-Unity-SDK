@@ -23,5 +23,32 @@ namespace PlayerMake.Api
                 Callbacks = callbacks
             });
         }
+
+
+        public virtual async Task<DeveloperQuotaResponse> GetQuoataAsync(string apiKey, RequestCallbacks callbacks = null)
+        {
+            return await GetAsync<DeveloperQuotaResponse>(new Request()
+            {
+                Url = $"{_settings.ApiBaseUrl}/v1/creations/quota",
+                Callbacks = callbacks,
+                Headers = new Dictionary<string, string>()
+                {
+                    { "x-api-key", apiKey }
+                }
+            });
+        }
+
+        public virtual async Task<DeveloperValidationResponse> VerifyApiKeyAsync(string apiKey, RequestCallbacks callbacks = null)
+        {
+            return await GetAsync<DeveloperValidationResponse>(new Request()
+            {
+                Url = $"{_settings.ApiBaseUrl}/v1/{Resource}/profile-by-api-key",
+                Callbacks = callbacks,
+                Headers = new Dictionary<string, string>()
+                {
+                    { "x-api-key", apiKey }
+                }
+            });
+        }
     }
 }

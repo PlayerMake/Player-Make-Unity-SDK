@@ -15,14 +15,19 @@
   },
   "samples": [
     {
-      "displayName": "Public Creations",
-      "descriptions": "Contains a sample scene showing how a developer's UGC content can be listed and instantiated in the scene.",
-      "path": "Samples~/Public Creations"
+      "displayName": "Public Creations URP",
+      "descriptions": "Contains a sample scene, compatible with the universal render pipeline, showing how a developer's UGC content can be listed and instantiated in the scene.",
+      "path": "Samples~/Public Creations URP"
     },
     {
-      "displayName": "Player Login",
-      "description": "Contains a sample scene showing how to use player login codes to fetch UGC content for specific players.",
-      "path": "Samples~/Player Login"
+      "displayName": "Public Creations BRP",
+      "descriptions": "Contains a sample scene, compatible with the built-in render pipeline, showing how a developer's UGC content can be listed and instantiated in the scene.",
+      "path": "Samples~/Public Creations BRP"
+    },
+    {
+      "displayName": "Player Login BRP",
+      "description": "Contains a sample scene, compatible with the built-in render pipeline, showing how to use player login codes to fetch UGC content for specific players.",
+      "path": "Samples~/Player Login BRP"
     }
   ],
   "keywords": [
