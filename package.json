@@ -1,6 +1,6 @@
 {
   "name": "com.playermake.sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "displayName": "Player Make SDK",
   "description": "The official Player Make SDK. Easy to setup, and built to power UGC in games.",
   "unity": "2021.3",
