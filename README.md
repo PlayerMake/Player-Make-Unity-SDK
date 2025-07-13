@@ -7,7 +7,7 @@
 
 ## Docs
 
-For more help on how to get started, visit our [docs](https://player-make.gitbook.io/player-make-docs/engine-integrations/unity-quick-start).
+For more help on how to get started, visit our [docs](https://player-make.gitbook.io/docs/engine-integrations/unity/get-started).
 
 ## Contributing
 
