@@ -98,8 +98,15 @@ namespace PlayerMake.V1
             return (creationResponse.Data, creationResponse.Pagination);
         }
 
-        public static async Task<GameObject> InstantiateAsync<T>(T downloadableModel, string name = null, Transform parent = null) where T : IDownloadableModel
+        public static async Task<GameObject> InstantiateAsync<T>(
+            T downloadableModel,
+            string name = null,
+            Transform parent = null,
+            CacheOptions cacheOptions = default
+        ) where T : IDownloadableModel
         {
+            cacheOptions ??= new CacheOptions();
+
             Init();
 
             var provider = new CustomHeaderDownloadProvider(new List<HttpHeader>()
@@ -109,8 +116,38 @@ namespace PlayerMake.V1
 
             var importer = new GltfImport(provider);
 
-            if (!await importer.Load(downloadableModel.Url))
+            byte[] glbBytes = null;
+            var cachedAsset = cacheOptions.SkipCache
+                ? null
+                : await CacheManager.LoadAsync(downloadableModel.Id, CacheType.Model);
+
+            if (cachedAsset == null)
+            {
+                glbBytes = await FileApi.DownloadFileAsync(
+                    downloadableModel.Url,
+                    _developerSettings.ApiKey
+                );
+            }
+            else
+            {
+                glbBytes = cachedAsset;
+            }
+
+            var importAction = glbBytes == null
+                ? importer.Load(downloadableModel.Url)
+                : importer.LoadGltfBinary(glbBytes);
+
+            if (!await importAction)
                 return null;
+
+            if (cachedAsset == null && glbBytes != null && cacheOptions.CacheResult)
+            {
+                await CacheManager.EnforceModelCacheLimitsAsync(
+                    _developerSettings.ModelCacheTotalFileSizeLimitMb,
+                    _developerSettings.ModelCacheFileCountLimit
+                );
+                await CacheManager.SaveAsync(glbBytes, downloadableModel.Id, CacheType.Model);
+            }
 
             var gameObject = new GameObject(name);
 
@@ -121,8 +158,13 @@ namespace PlayerMake.V1
             return gameObject;
         }
 
-        public static async Task<GameObject> ApplySkinAsync<T>(T downloadableModel, GameObject target) where T : IDownloadableModel
+        public static async Task<GameObject> ApplySkinAsync<T>(
+            T downloadableModel,
+            GameObject target,
+            CacheOptions cacheOptions = default) where T : IDownloadableModel
         {
+            cacheOptions ??= new CacheOptions();
+
             Init();
 
             var provider = new CustomHeaderDownloadProvider(new List<HttpHeader>()
@@ -132,8 +174,37 @@ namespace PlayerMake.V1
 
             var importer = new GltfImport(provider);
 
-            if (!await importer.Load(downloadableModel.Url))
+            byte[] glbBytes = null;
+            var cachedAsset = cacheOptions.SkipCache
+                ? null
+                : await CacheManager.LoadAsync(downloadableModel.Id, CacheType.Model);
+
+            if (cachedAsset == null)
+            {
+                glbBytes = await FileApi.DownloadFileAsync(
+                    downloadableModel.Url,
+                    _developerSettings.ApiKey
+                );
+            } else
+            {
+                glbBytes = cachedAsset;
+            }
+
+            var importAction = glbBytes == null
+                ? importer.Load(downloadableModel.Url)
+                : importer.LoadGltfBinary(glbBytes);
+
+            if (!await importAction)
                 return null;
+
+            if (cachedAsset == null && glbBytes != null && cacheOptions.CacheResult)
+            {
+                await CacheManager.EnforceModelCacheLimitsAsync(
+                    _developerSettings.ModelCacheTotalFileSizeLimitMb,
+                    _developerSettings.ModelCacheFileCountLimit
+                );
+                await CacheManager.SaveAsync(glbBytes, downloadableModel.Id, CacheType.Model);
+            }
 
             var gameObject = new GameObject("PlayerMake_Temp");
 
@@ -148,23 +219,54 @@ namespace PlayerMake.V1
             return target;
         }
 
-        public static async Task<List<IconDownloadResponse>> LoadIconAsync<T>(T downloadableIcon) where T : IDownloadableIcon
+        public static async Task<List<IconDownloadResponse>> LoadIconAsync<T>(T downloadableIcon, CacheOptions cacheOptions = default) where T : IDownloadableIcon
         {
+            cacheOptions ??= new CacheOptions();
+
             Init();
 
-            return await LoadIconsAsync(new List<T>() { downloadableIcon });
+            return await LoadIconsAsync(new List<T>() { downloadableIcon }, cacheOptions);
         }
 
-        public static async Task<List<IconDownloadResponse>> LoadIconsAsync<T>(List<T> downloadableIcons) where T : IDownloadableIcon
+        public static async Task<List<IconDownloadResponse>> LoadIconsAsync<T>(
+            List<T> downloadableIcons,
+            CacheOptions cacheOptions = default
+        ) where T : IDownloadableIcon
         {
+            cacheOptions ??= new CacheOptions();
+
             Init();
 
             return (await Task.WhenAll(downloadableIcons
-                .Select(async downloadableIcon =>
-                    new IconDownloadResponse()
+                .Select(async downloadableIcon => {
+                    var cachedIcon = cacheOptions.SkipCache
+                        ? null
+                        : await CacheManager.LoadAsync(downloadableIcon.Id, CacheType.Icon);
+
+                    var texture = new Texture2D(0, 0);
+
+                    var image = cachedIcon == null
+                        ? await FileApi.DownloadImageAsync(downloadableIcon.IconUrl, _developerSettings.ApiKey)
+                        : FileApi.TextureFromBytes(cachedIcon);
+
+                    var response = new IconDownloadResponse()
                     {
                         Id = downloadableIcon.Id,
-                        Image = await FileApi.DownloadImageAsync(downloadableIcon.IconUrl, _developerSettings.ApiKey)
+                        Image = image
+                    };
+
+                    var imageBytes = image.EncodeToPNG();
+
+                    if (cacheOptions.CacheResult)
+                    {
+                        await CacheManager.EnforceIconCacheLimitsAsync(
+                            _developerSettings.IconCacheTotalFileSizeLimitMb,
+                            _developerSettings.IconCacheFileCountLimit
+                        );
+                        await CacheManager.SaveAsync(imageBytes, downloadableIcon.Id, CacheType.Icon);
+                    }
+
+                    return response;
                     }
                 ))).ToList();
         }
@@ -179,6 +281,13 @@ namespace PlayerMake.V1
                 return userResponse.Data;
 
             return null;
+        }
+
+        public static async Task ClearCacheAsync()
+        {
+            Init();
+
+            await CacheManager.ClearCache();
         }
 
         public static async Task<DeveloperQuota> GetQuotaAsync(string apiKey, RequestCallbacks callbacks = null)

@@ -165,6 +165,62 @@ namespace PlayerMake.Editor.UI.Windows
 
             EditorGUILayout.EndVertical();
 
+            EditorGUILayout.LabelField("Cache Config", new GUIStyle()
+            {
+                fontStyle = FontStyle.Bold,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white
+                },
+                margin = new RectOffset(5, 0, 10, 0),
+            });
+
+            var iconCacheTotalFileSizeLimit = EditorGUILayout.IntField("Icon total file size (MB)", settings.IconCacheTotalFileSizeLimitMb);
+
+            if (iconCacheTotalFileSizeLimit != settings.IconCacheTotalFileSizeLimitMb)
+            {
+                settings.IconCacheTotalFileSizeLimitMb = iconCacheTotalFileSizeLimit;
+                EditorUtility.SetDirty(settings);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            var iconCacheTotalCountLimit = EditorGUILayout.IntField("Icon max file count", settings.IconCacheFileCountLimit);
+
+            if (iconCacheTotalCountLimit != settings.IconCacheFileCountLimit)
+            {
+                settings.IconCacheFileCountLimit = iconCacheTotalCountLimit;
+                EditorUtility.SetDirty(settings);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            var modelCacheTotalFileSizeLimit = EditorGUILayout.IntField("Model total file size (MB)", settings.ModelCacheTotalFileSizeLimitMb);
+
+            if (modelCacheTotalFileSizeLimit != settings.ModelCacheTotalFileSizeLimitMb)
+            {
+                settings.ModelCacheTotalFileSizeLimitMb = modelCacheTotalFileSizeLimit;
+                EditorUtility.SetDirty(settings);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            var modelCacheTotalCountLimit = EditorGUILayout.IntField("Model max file count", settings.ModelCacheFileCountLimit);
+
+            if (modelCacheTotalCountLimit != settings.ModelCacheFileCountLimit)
+            {
+                settings.ModelCacheFileCountLimit = modelCacheTotalCountLimit;
+                EditorUtility.SetDirty(settings);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+
+            EditorGUILayout.BeginVertical(new GUIStyle()
+            {
+                margin = new RectOffset(10, 10, 10, 0)
+            });
+
+            EditorGUILayout.EndVertical();
 
             EditorGUILayout.LabelField("Account Stats", new GUIStyle()
             {
